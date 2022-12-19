@@ -602,20 +602,20 @@ bool mkdir (const char *dir){
 }
 
 bool readdir (int fd, char name[READDIR_MAX_LEN + 1]){
-	struct file *f = process_get_file(fd);
-	if (f == NULL)
-		return false;
 
-	if (!inode_is_dir(f->inode))
+	struct file *f = process_get_file(fd);
+	if (f == NULL){
 		return false;
+	}
+
+	if (!inode_is_dir(f->inode)){
+		return false;
+	}
 
 	struct dir *dir = f;
-
 	bool success;
-	while(name == "." || name == ".."){
-		success = dir_readdir(dir, name);
-	}
 	
+	success = dir_readdir(dir, name);
 	return success;
 }
 

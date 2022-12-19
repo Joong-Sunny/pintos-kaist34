@@ -219,12 +219,16 @@ done:
  * NAME.  Returns true if successful, false if the directory
  * contains no more entries. */
 bool dir_readdir(struct dir *dir, char name[NAME_MAX + 1])
-{
+{	
 	struct dir_entry e;
 
 	while (inode_read_at(dir->inode, &e, sizeof e, dir->pos) == sizeof e)
 	{
 		dir->pos += sizeof e;
+		
+		if (!strcmp(e.name, ".") || !strcmp(e.name, ".."))
+			continue;
+		
 		if (e.in_use)
 		{
 			strlcpy(name, e.name, NAME_MAX + 1);
